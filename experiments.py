@@ -6,9 +6,11 @@ import matplotlib.pyplot as plt
 plt.style.use("seaborn")
 
 
-def learn(
-    M, K, theta_list, bandit_machine, N, num_success_R, num_success_TS, num_success_G
-):
+def learn(M, K, theta_list, bandit_machine, N):
+    num_success_R = np.zeros(N)
+    num_success_TS = np.zeros(N)
+    num_success_G = np.zeros(N)
+
     for num_run in range(M):
         R = RandomAgent(K)
         TS = ThompsonAgent(K)
@@ -38,18 +40,10 @@ def learn(
     return num_success_R, num_success_TS, num_success_G
 
 
-if __name__ == "__main__":
-    fig, axs = plt.subplots(3)
-    M = 500
-    K = 10
-
-    # First experiment
+def first_experiment(axs, M, K):
     theta_list = [0.9, 0.8] + [0.5 for _ in range(8)]
     bandit_machine = MultiArmedBandit(K, theta_list)
     N = 1000
-    num_success_R = np.zeros(N)
-    num_success_TS = np.zeros(N)
-    num_success_G = np.zeros(N)
 
     num_success_R, num_success_TS, num_success_G = learn(
         M,
@@ -57,9 +51,6 @@ if __name__ == "__main__":
         theta_list,
         bandit_machine,
         N,
-        num_success_R,
-        num_success_TS,
-        num_success_G,
     )
 
     x = list(range(1, N + 1))
@@ -73,23 +64,14 @@ if __name__ == "__main__":
     axs[0].set_xlabel("trials")
     axs[0].set_ylabel("success rate")
 
-    # Second experiment
+
+def second_experiment(axs, M, K):
     theta_list = [0.9, 0.88] + [0.5 for _ in range(8)]
     bandit_machine = MultiArmedBandit(K, theta_list)
     N = 3000
-    num_success_R = np.zeros(N)
-    num_success_TS = np.zeros(N)
-    num_success_G = np.zeros(N)
 
     num_success_R, num_success_TS, num_success_G = learn(
-        M,
-        K,
-        theta_list,
-        bandit_machine,
-        N,
-        num_success_R,
-        num_success_TS,
-        num_success_G,
+        M, K, theta_list, bandit_machine, N
     )
 
     x = list(range(1, N + 1))
@@ -103,23 +85,14 @@ if __name__ == "__main__":
     axs[1].set_xlabel("trials")
     axs[1].set_ylabel("success rate")
 
-    # Thrid experiment
+
+def third_experiment(axs, M, K):
     theta_list = [0.9] + [0.85 for _ in range(9)]
     bandit_machine = MultiArmedBandit(K, theta_list)
     N = 3000
-    num_success_R = np.zeros(N)
-    num_success_TS = np.zeros(N)
-    num_success_G = np.zeros(N)
 
     num_success_R, num_success_TS, num_success_G = learn(
-        M,
-        K,
-        theta_list,
-        bandit_machine,
-        N,
-        num_success_R,
-        num_success_TS,
-        num_success_G,
+        M, K, theta_list, bandit_machine, N
     )
 
     x = list(range(1, N + 1))
@@ -132,6 +105,18 @@ if __name__ == "__main__":
     axs[2].set_title("Experiment 3")
     axs[2].set_xlabel("trials")
     axs[2].set_ylabel("success rate")
+
+
+if __name__ == "__main__":
+    fig, axs = plt.subplots(3)
+    M = 500
+    K = 10
+
+    first_experiment(axs, M, K)
+
+    second_experiment(axs, M, K)
+
+    third_experiment(axs, M, K)
 
     plt.tight_layout()
     plt.show()
